@@ -49,7 +49,6 @@ const Login = () => {
       alert("Usuario/Senha inválida!")
     }
   }
-
   return (
     <>
     <LoginStyle>
