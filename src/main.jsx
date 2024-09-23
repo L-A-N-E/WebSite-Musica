@@ -7,9 +7,12 @@ import App from './App.jsx'
 import Home from './routes/Home.jsx'
 import Login from './routes/Login.jsx'
 import Music from './routes/Music.jsx'
+import Error from './routes/Error.jsx'
+// Importando estilo
+import {GlobalStyle} from './styles/GlobalStyle.jsx'
 
 const router = createBrowserRouter ([
-  {path: '/', element: <App/>,errorElement: <Error/>,
+  {path: '/', element: <App/>, errorElement: <Error/>,
 
     children:[
       {path: '/', element: <Home/>}, 
@@ -22,5 +25,6 @@ const router = createBrowserRouter ([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router = {router} />
+    <GlobalStyle/>
   </StrictMode>,
 )

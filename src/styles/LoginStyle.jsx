@@ -72,7 +72,6 @@ export const LoginStyle = styled.section`
                         .login-form-btn{
                             padding: 0.5rem 1rem;
                             background-color: #D9D9D9;
-                            color: ${Colors.bg_color};
                             text-transform: uppercase;
                             font-weight: 800;
                             border: solid 1px #D9D9D9;
