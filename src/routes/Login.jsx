@@ -1,48 +1,92 @@
-import React from 'react'
-import { useRef } from 'react'
-// Importando estilos
-import { LoginStyle } from '../styles/LoginStyle'
+// Importando dependencias
+import React, { useRef, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+// importando estilo
+import { LoginStyle } from '../styles/LoginStyle';
 
 const Login = () => {
 
-    const user = useRef();
-    const password = useRef();
+  // Hook-useRef: Pega a referencia de um componente ou elemento do DOM
+  const usuario = useRef();
+  const password = useRef();
 
-    const getUser = sessionStorage.getItem('user');
-    const getPassword = sessionStorage.getItem('password');
+  // Hook - useState 
+  const [usuarios, setUsuarios] = useState([])
 
-    // Criando a função handleLogin
-    const handleLogin = () =>{
-        if(user.current.value == 'Admin' && password.current.value == '123456'){
-            alert('Login realizado com sucesso!')
+  // Hook useNavigate
+  const navigate = useNavigate();
 
-            let token =
-             Math.random().toString(16).substring(2) +
-             Math.random().toString(16).substring(2)
+  // Hook useEffect: busca dados para o Login
+  useEffect(()=>{
+    fetch("http://localhost:5000/usuarios/")
+    .then(res => {
+      return res.json();
+    })
+    .then(res => {
+      setUsuarios(res);
+    })
+  })
 
-            sessionStorage.setItem('user', 'Admin');
-            sessionStorage.setItem('password', token);
-        } else{
-            alert('Usuário/Senha incorretas!')
-        }
+  // Validar Login
+  const validade = () =>{
+    for(let i = 0; i < usuarios.length; i++ ){
+      if(usuarios[i].usuario == usuario.current.value && usuarios[i].password == password.current.value){
+        return true
+      }
     }
+  }
+
+  // Criando handleSubmit
+  const handleSubmit = (event) =>{
+    event.preventDefault();
+    if(validade()){
+      let token = Math.random().toString(16).substring(2) + Math.random().toString(16).substring(2)
+
+      sessionStorage.setItem("usuario", usuario.current.value);
+      sessionStorage.setItem("senha", token)
+      navigate('/dashboard')
+    }else{
+      alert("Usuario/Senha inválida!")
+    }
+  }
 
   return (
     <>
     <LoginStyle>
-        <section className="pag-login">
-            <form className='container-login' onSubmit={handleLogin}>
-                <div className='inputs-login'>
-                    <p className='p-login'>Usuário</p>
-                    <input type='text' placeholder='Usuário' className='input-login' ref={user}/>
-                </div>
-                <div className='inputs-login'>
-                    <p className='p-login'>Senha</p>
-                    <input type="password" placeholder='Senha' className='input-login' ref={password} />
-                </div>
-                <button type='submit' className='button-login'>Enviar</button>
+      <section className='container'>
+        <div className="container-login">
+          <div className="login">
+            {/* Formulário Login */}
+            <form action="" className="login-form">
+              <span className='titulo-login'>Faça o seu Login!</span>
+              {/* Input Usuário */}
+              <div className="w-input">
+                <input
+                  type="text"
+                  ref={usuario}
+                  id="usuario"
+                  className="input-form"
+                  placeholder='Digite seu usuário'
+                  />
+              </div>
+              {/* Input Senha */}
+              <div className="w-input">
+                <input
+                type="password"
+                id="password"
+                ref={password}
+                className='input-form'
+                placeholder='Digite sua senha'
+                />
+              </div>
+              {/* BTN Login */}
+              <div className="login-btn">
+                <button type="submit" className="login-form-btn" onClick={handleSubmit}>Login</button>
+              </div>
             </form>
-        </section>
+          </div>
+        </div>
+      </section>
     </LoginStyle>
     </>
   )
